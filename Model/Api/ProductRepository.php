@@ -9,6 +9,7 @@ use Dev\RestApi\Api\ResponseItemInterface;
 use Dev\RestApi\Api\ResponseItemInterfaceFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product\Action;
+use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
@@ -99,7 +100,7 @@ class ProductRepository implements ProductRepositoryInterface
     /**
      * @return Collection
      */
-    private function getProductCollection() : mixed
+    private function getProductCollection() : Collection
     {
         /** @var Collection $collection */
         $collection = $this->productCollectionFactory->create();
@@ -120,7 +121,7 @@ class ProductRepository implements ProductRepositoryInterface
      * @param ProductInterface $product
      * @return ResponseItemInterface
      */
-    private function getResponseItemFromProduct(ProductInterface $product) : mixed
+    private function getResponseItemFromProduct(ProductInterface $product) : ResponseItemInterface
     {
         /** @var ResponseItemInterface $responseItem */
         $responseItem = $this->responseItemFactory->create();

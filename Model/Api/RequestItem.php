@@ -31,7 +31,7 @@ class RequestItem extends DataObject implements RequestItemInterface
      * @param int $id
      * @return $this
      */
-    public function setId(int $id)
+    public function setId(int $id) : RequestItemInterface
     {
         return $this->setData(self::DATA_ID, $id);
     }
@@ -40,7 +40,7 @@ class RequestItem extends DataObject implements RequestItemInterface
      * @param string $description
      * @return $this
      */
-    public function setDescription(string $description)
+    public function setDescription(string $description) : RequestItemInterface
     {
         return $this->setData(self::DATA_DESCRIPTION, $description);
     }

@@ -47,7 +47,7 @@ class ResponseItem extends DataObject implements ResponseItemInterface
      * @param int $id
      * @return $this
      */
-    public function setId(int $id)
+    public function setId(int $id) : ResponseItemInterface
     {
         return $this->setData(self::DATA_ID, $id);
     }
@@ -56,7 +56,7 @@ class ResponseItem extends DataObject implements ResponseItemInterface
      * @param string $sku
      * @return $this
      */
-    public function setSku(string $sku)
+    public function setSku(string $sku) : ResponseItemInterface
     {
         return $this->setData(self::DATA_SKU, $sku);
     }
@@ -65,7 +65,7 @@ class ResponseItem extends DataObject implements ResponseItemInterface
      * @param string $name
      * @return $this
      */
-    public function setName(string $name)
+    public function setName(string $name) : ResponseItemInterface
     {
         return $this->setData(self::DATA_NAME, $name);
     }
@@ -74,7 +74,7 @@ class ResponseItem extends DataObject implements ResponseItemInterface
      * @param string $description
      * @return $this
      */
-    public function setDescription(string $description) : mixed
+    public function setDescription(string $description) : ResponseItemInterface
     {
         return $this->setData(self::DATA_DESCRIPTION, $description);
     }
