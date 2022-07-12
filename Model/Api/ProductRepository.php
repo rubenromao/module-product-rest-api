@@ -1,13 +1,18 @@
 <?php
+declare(strict_types=1);
+
 namespace Dev\RestApi\Model\Api;
+
 use Dev\RestApi\Api\ProductRepositoryInterface;
 use Dev\RestApi\Api\RequestItemInterfaceFactory;
+use Dev\RestApi\Api\ResponseItemInterface;
 use Dev\RestApi\Api\ResponseItemInterfaceFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product\Action;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
+
 /**
  * Class ProductRepository
  */
@@ -33,6 +38,7 @@ class ProductRepository implements ProductRepositoryInterface
      * @var StoreManagerInterface
      */
     private $storeManager;
+
     /**
      * @param Action $productAction
      * @param CollectionFactory $productCollectionFactory
@@ -53,6 +59,7 @@ class ProductRepository implements ProductRepositoryInterface
         $this->responseItemFactory = $responseItemFactory;
         $this->storeManager = $storeManager;
     }
+
     /**
      * {@inheritDoc}
      *
@@ -60,7 +67,7 @@ class ProductRepository implements ProductRepositoryInterface
      * @return ResponseItemInterface
      * @throws NoSuchEntityException
      */
-    public function getItem(int $id) : mixed
+    public function getItem(int $id) : ResponseItemInterface
     {
         $collection = $this->getProductCollection()
             ->addAttributeToFilter('entity_id', ['eq' => $id]);
@@ -71,11 +78,13 @@ class ProductRepository implements ProductRepositoryInterface
         }
         return $this->getResponseItemFromProduct($product);
     }
+
     /**
      * {@inheritDoc}
      *
      * @param RequestItemInterface[] $products
      * @return void
+     * @throws NoSuchEntityException
      */
     public function setDescription(array $products) : void
     {
@@ -86,6 +95,7 @@ class ProductRepository implements ProductRepositoryInterface
             );
         }
     }
+
     /**
      * @return Collection
      */
@@ -105,6 +115,7 @@ class ProductRepository implements ProductRepositoryInterface
             );
         return $collection;
     }
+
     /**
      * @param ProductInterface $product
      * @return ResponseItemInterface
@@ -113,18 +124,21 @@ class ProductRepository implements ProductRepositoryInterface
     {
         /** @var ResponseItemInterface $responseItem */
         $responseItem = $this->responseItemFactory->create();
-        $responseItem->setId($product->getId())
+        $responseItem->setId((int)$product->getId())
             ->setSku($product->getSku())
             ->setName($product->getName())
             ->setDescription($product->getDescription());
         return $responseItem;
     }
+
     /**
      * Set the description for the product.
      *
      * @param int $id
      * @param string $description
      * @return void
+     * @throws NoSuchEntityException
+     * @throws \Exception
      */
     private function setDescriptionForProduct(int $id, string $description) : void
     {

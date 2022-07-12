@@ -1,5 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Dev\RestApi\Api;
+
 interface ProductRepositoryInterface
 {
     /**
@@ -9,12 +12,13 @@ interface ProductRepositoryInterface
      * @return \Dev\RestApi\Api\ResponseItemInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getItem(int $id);
+    public function getItem(int $id): ResponseItemInterface;
+
     /**
      * Set descriptions for the products.
      *
      * @param \Dev\RestApi\Api\RequestItemInterface[] $products
      * @return void
      */
-    public function setDescription(array $products);
+    public function setDescription(array $products): void;
 }
