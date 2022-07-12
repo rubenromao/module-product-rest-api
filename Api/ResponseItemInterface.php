@@ -34,23 +34,23 @@ interface ResponseItemInterface
      * @param int $id
      * @return $this
      */
-    public function setId(int $id): ResponseItemInterface;
+    public function setId(int $id): self;
 
     /**
      * @param string $sku
      * @return $this
      */
-    public function setSku(string $sku): ResponseItemInterface;
+    public function setSku(string $sku): self;
 
     /**
      * @param string $name
      * @return $this
      */
-    public function setName(string $name): ResponseItemInterface;
+    public function setName(string $name): self;
 
     /**
      * @param string $description
      * @return $this
      */
-    public function setDescription(string $description): ResponseItemInterface;
+    public function setDescription(string $description): self;
 }

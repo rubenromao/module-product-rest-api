@@ -79,4 +79,3 @@ class ResponseItem extends DataObject implements ResponseItemInterface
         return $this->setData(self::DATA_DESCRIPTION, $description);
     }
 }
-

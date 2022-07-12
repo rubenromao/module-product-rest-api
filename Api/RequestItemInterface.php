@@ -22,11 +22,11 @@ interface RequestItemInterface
      * @param int $id
      * @return $this
      */
-    public function setId(int $id): RequestItemInterface;
+    public function setId(int $id): self;
 
     /**
      * @param string $description
      * @return $this
      */
-    public function setDescription(string $description): RequestItemInterface;
+    public function setDescription(string $description): self;
 }
