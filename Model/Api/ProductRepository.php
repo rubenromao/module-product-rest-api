@@ -5,7 +5,6 @@ namespace Dev\RestApi\Model\Api;
 
 use Dev\RestApi\Api\ProductRepositoryInterface;
 use Dev\RestApi\Api\RequestItemInterface;
-use Dev\RestApi\Api\RequestItemInterfaceFactory;
 use Dev\RestApi\Api\ResponseItemInterface;
 use Dev\RestApi\Api\ResponseItemInterfaceFactory;
 use Exception;
@@ -30,10 +29,6 @@ class ProductRepository implements ProductRepositoryInterface
      */
     private $productCollectionFactory;
     /**
-     * @var RequestItemInterfaceFactory
-     */
-    private $requestItemFactory;
-    /**
      * @var ResponseItemInterfaceFactory
      */
     private $responseItemFactory;
@@ -45,26 +40,23 @@ class ProductRepository implements ProductRepositoryInterface
     /**
      * @param Action $productAction
      * @param CollectionFactory $productCollectionFactory
-     * @param RequestItemInterfaceFactory $requestItemFactory
      * @param ResponseItemInterfaceFactory $responseItemFactory
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         Action $productAction,
         CollectionFactory $productCollectionFactory,
-        RequestItemInterfaceFactory $requestItemFactory,
         ResponseItemInterfaceFactory $responseItemFactory,
         StoreManagerInterface $storeManager
     ) {
         $this->productAction = $productAction;
         $this->productCollectionFactory = $productCollectionFactory;
-        $this->requestItemFactory = $requestItemFactory;
         $this->responseItemFactory = $responseItemFactory;
         $this->storeManager = $storeManager;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @param int $id
      * @return ResponseItemInterface
@@ -83,7 +75,7 @@ class ProductRepository implements ProductRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @param RequestItemInterface[] $products
      * @return void

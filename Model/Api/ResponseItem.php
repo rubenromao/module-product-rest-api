@@ -7,7 +7,7 @@ use Dev\RestApi\Api\ResponseItemInterface;
 use Magento\Framework\DataObject;
 
 /**
- * Class ResponseItem
+ *
  */
 class ResponseItem extends DataObject implements ResponseItemInterface
 {
