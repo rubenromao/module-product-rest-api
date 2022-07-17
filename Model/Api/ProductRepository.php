@@ -7,7 +7,6 @@ use Dev\RestApi\Api\ProductRepositoryInterface;
 use Dev\RestApi\Api\RequestItemInterface;
 use Dev\RestApi\Api\ResponseItemInterface;
 use Dev\RestApi\Api\ResponseItemInterfaceFactory;
-use Exception;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product\Action;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
@@ -133,7 +132,7 @@ class ProductRepository implements ProductRepositoryInterface
      * @param string $description
      * @return void
      * @throws NoSuchEntityException
-     * @throws Exception
+     * @throws \Exception
      */
     private function setDescriptionForProduct(int $id, string $description) : void
     {
