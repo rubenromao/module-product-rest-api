@@ -89,7 +89,7 @@ class ProductLoader extends AbstractLoader
         $this->setSecureArea();
         foreach ($this->productData as $product) {
             $image = $product['image'];
-            //$this->createMainImage($image);
+            $this->createMainImage($image);
             /** @var $productModel Product */
             $productModel = $this->createObject(Product::class);
             $productModel->setTypeId($product['type'])
