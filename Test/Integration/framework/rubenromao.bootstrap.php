@@ -3,37 +3,30 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-use Magento\Framework\Autoload\AutoloaderRegistry;
-use Magento\TestFramework\Bootstrap\Settings;
 
-/**
- * phpcs:disable PSR1.Files.SideEffects
- * phpcs:disable Squiz.Functions.GlobalFunction
- * phpcs:disable Magento2.Security.IncludeFile
- */
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Autoload\AutoloaderRegistry;
+
 require_once __DIR__ . '/../../../../../../../app/bootstrap.php';
 require_once __DIR__ . '/../../../../../../autoload.php';
 
-// phpcs:ignore Magento2.Functions.DiscouragedFunction
 $testsBaseDir = dirname(__DIR__);
-$fixtureBaseDir = $testsBaseDir. '/testsuite';
+$integrationTestsDir = realpath("{$testsBaseDir}/../integration");
+$fixtureBaseDir = $integrationTestsDir . '/testsuite';
 
 if (!defined('TESTS_TEMP_DIR')) {
     define('TESTS_TEMP_DIR', $testsBaseDir . '/tmp');
 }
 
 if (!defined('INTEGRATION_TESTS_DIR')) {
-    define('INTEGRATION_TESTS_DIR', $testsBaseDir);
+    define('INTEGRATION_TESTS_DIR', $integrationTestsDir);
 }
 
 try {
     setCustomErrorHandler();
-    /* Bootstrap the application */
-    //echo __DIR__;exit;
-    $settings = new Settings('', get_defined_constants());
 
-    $testFrameworkDir = __DIR__;
-    require_once 'deployTestModules.php';
+    /* Bootstrap the application */
+    $settings = new \Magento\TestFramework\Bootstrap\Settings($testsBaseDir, get_defined_constants());
 
     if ($settings->get('TESTS_EXTRA_VERBOSE_LOG')) {
         $filesystem = new \Magento\Framework\Filesystem\Driver\File();
@@ -50,74 +43,72 @@ try {
         $shell = new \Magento\Framework\Shell(new \Magento\Framework\Shell\CommandRenderer());
     }
 
+    $testFrameworkDir = __DIR__;
+    require_once INTEGRATION_TESTS_DIR . '/framework/deployTestModules.php';
+
     $installConfigFile = $settings->getAsConfigFile('TESTS_INSTALL_CONFIG_FILE');
-    // phpcs:ignore Magento2.Functions.DiscouragedFunction
     if (!file_exists($installConfigFile)) {
-        $installConfigFile .= '.dist';
+        $installConfigFile = $installConfigFile . '.dist';
     }
-
-    $postInstallSetupConfigFile = $settings->getAsConfigFile('TESTS_POST_INSTALL_SETUP_COMMAND_CONFIG_FILE');
-
+    $postInstallConfigFile = $settings->getAsConfigFile('TESTS_POST_INSTALL_SETUP_COMMAND_CONFIG_FILE');
+    if (!file_exists($postInstallConfigFile)) {
+        $postInstallConfigFile = $postInstallConfigFile . '.dist';
+    }
     $globalConfigFile = $settings->getAsConfigFile('TESTS_GLOBAL_CONFIG_FILE');
-    // phpcs:ignore Magento2.Functions.DiscouragedFunction
     if (!file_exists($globalConfigFile)) {
-        $globalConfigFile .= '.dist';
+        $globalConfigFile = $globalConfigFile . '.dist';
     }
-    $sandboxUniqueId = hash('sha256', sha1_file($installConfigFile));
-    $installDir = TESTS_TEMP_DIR . "/sandbox-{$settings->get('TESTS_PARALLEL_THREAD', 0)}-{$sandboxUniqueId}";
-    $application = new \Magento\TestFramework\Application(
+    $dirList     = new \Magento\Framework\App\Filesystem\DirectoryList(BP);
+    $application = new \Magento\TestFramework\WebApiApplication(
         $shell,
-        $installDir,
+        $dirList->getPath(DirectoryList::VAR_DIR),
         $installConfigFile,
         $globalConfigFile,
-        $settings->get('TESTS_GLOBAL_CONFIG_DIR'),
+        BP . '/app/etc/',
         $settings->get('TESTS_MAGENTO_MODE'),
         AutoloaderRegistry::getAutoloader(),
-        true,
-        $postInstallSetupConfigFile
+        false,
+        $postInstallConfigFile
     );
+
+    if (defined('TESTS_MAGENTO_INSTALLATION') && TESTS_MAGENTO_INSTALLATION === 'enabled') {
+        $cleanup = (defined('TESTS_CLEANUP') && TESTS_CLEANUP === 'enabled');
+        $application->install($cleanup);
+    }
 
     $bootstrap = new \Magento\TestFramework\Bootstrap(
         $settings,
         new \Magento\TestFramework\Bootstrap\Environment(),
-        new \Magento\TestFramework\Bootstrap\DocBlock("{$testsBaseDir}/testsuite"),
+        new \Magento\TestFramework\Bootstrap\WebapiDocBlock("{$integrationTestsDir}/testsuite"),
         new \Magento\TestFramework\Bootstrap\Profiler(new \Magento\Framework\Profiler\Driver\Standard()),
         $shell,
         $application,
         new \Magento\TestFramework\Bootstrap\MemoryFactory($shell)
     );
     $bootstrap->runBootstrap();
-    if ($settings->getAsBoolean('TESTS_CLEANUP')) {
-        $application->cleanup();
-    }
-    if (!$application->isInstalled()) {
-        $application->install($settings->getAsBoolean('TESTS_CLEANUP'));
-    }
-    $application->initialize([]);
+    $application->initialize();
 
     \Magento\TestFramework\Helper\Bootstrap::setInstance(new \Magento\TestFramework\Helper\Bootstrap($bootstrap));
-
     $dirSearch = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
         ->create(\Magento\Framework\Component\DirSearch::class);
     $themePackageList = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
         ->create(\Magento\Framework\View\Design\Theme\ThemePackageList::class);
     \Magento\Framework\App\Utility\Files::setInstance(
-        new Magento\Framework\App\Utility\Files(
+        new \Magento\Framework\App\Utility\Files(
             new \Magento\Framework\Component\ComponentRegistrar(),
             $dirSearch,
             $themePackageList
         )
     );
     $overrideConfig = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
-        Magento\TestFramework\Workaround\Override\Config::class
+        Magento\TestFramework\WebapiWorkaround\Override\Config::class
     );
     $overrideConfig->init();
-    Magento\TestFramework\Workaround\Override\Config::setInstance($overrideConfig);
     Magento\TestFramework\Workaround\Override\Fixture\Resolver::setInstance(
-        new  \Magento\TestFramework\Workaround\Override\Fixture\Resolver($overrideConfig)
+        new  \Magento\TestFramework\WebapiWorkaround\Override\Fixture\Resolver($overrideConfig)
     );
-    /* Unset declared global variables to release the PHPUnit from maintaining their values between tests */
-    unset($testsBaseDir, $settings, $shell, $application, $bootstrap, $overrideConfig);
+    \Magento\TestFramework\Workaround\Override\Config::setInstance($overrideConfig);
+    unset($bootstrap, $application, $settings, $shell, $overrideConfig);
 } catch (\Exception $e) {
     // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
     echo $e . PHP_EOL;

@@ -6,7 +6,7 @@ return [
     'db-user'           => 'rubenromao_testing',
     'db-password'       => 'Password1',
     'db-prefix'         => '',
-    'base-url'          => 'https://testsuite.rubenromao.dev/',
+    'base-url'          => 'https://testlpw.dev/',
     'backend-frontname' => 'backend',
     'admin-user'        => \Magento\TestFramework\Bootstrap::ADMIN_NAME,
     'admin-password'    => \Magento\TestFramework\Bootstrap::ADMIN_PASSWORD,
