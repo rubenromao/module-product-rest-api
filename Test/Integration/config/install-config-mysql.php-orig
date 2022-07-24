@@ -1,0 +1,25 @@
+<?php
+return [
+    'language'                     => 'en_US',
+    'timezone'                     => 'America/Los_Angeles',
+    'currency'                     => 'USD',
+    'db-host'                      => 'localhost',
+    'db-name'                      => 'rubenromao_api_testing',
+    'db-user'                      => 'rubenromao_testing',
+    'db-password'                  => 'mytestpasswd',
+    'backend-frontname'            => 'backend',
+    'base-url'                     => 'https://testsuite.rubenromao.dev/',
+    'use-secure'                   => '0',
+    'use-rewrites'                 => '0',
+    'admin-lastname'               => 'Admin',
+    'admin-firstname'              => 'Admin',
+    'admin-email'                  => 'admin@example.com',
+    'admin-user'                   => 'admin',
+    'admin-password'               => 'Password1',
+    'admin-use-security-key'       => '0',
+    /* PayPal has limitation for order number - 20 characters. 10 digits prefix + 8 digits number is good enough */
+    'sales-order-increment-prefix' => '1',
+    'session-save'                 => 'files',
+    'cleanup-database'             => true,
+    'magento-init-params'          => 'MAGE_MODE=developer'
+];
