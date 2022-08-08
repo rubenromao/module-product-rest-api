@@ -1,8 +1,17 @@
 <?php
+/**
+ * @package Dev_RestApi
+ * @author rubenromao@gmail.com
+ */
 declare(strict_types=1);
 
 namespace Dev\RestApi\Api;
 
+/**
+ * Interface RequestItemInterface
+ * @api
+ * @since 1.0.0
+ */
 interface RequestItemInterface
 {
     const DATA_ID = 'id';

@@ -16,7 +16,7 @@ class ResponseItem extends DataObject implements ResponseItemInterface
      */
     public function getId() : int
     {
-        return $this->_getData(self::DATA_ID);
+        return $this->getData(self::DATA_ID);
     }
 
     /**

@@ -24,20 +24,25 @@ class ProductRepository implements ProductRepositoryInterface
      * @var Action
      */
     private $productAction;
+
     /**
      * @var CollectionFactory
      */
     private $productCollectionFactory;
+
     /**
      * @var ResponseItemInterfaceFactory
      */
     private $responseItemFactory;
+
     /**
      * @var StoreManagerInterface
      */
     private $storeManager;
 
     /**
+     * Constructor ProductRepository
+     *
      * @param Action $productAction
      * @param CollectionFactory $productCollectionFactory
      * @param ResponseItemInterfaceFactory $responseItemFactory

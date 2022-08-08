@@ -16,7 +16,7 @@ class RequestItem extends DataObject implements RequestItemInterface
      */
     public function getId() : int
     {
-        return $this->_getData(self::DATA_ID);
+        return $this->getData(self::DATA_ID);
     }
 
     /**
@@ -24,7 +24,7 @@ class RequestItem extends DataObject implements RequestItemInterface
      */
     public function getDescription() : string
     {
-        return $this->_getData(self::DATA_DESCRIPTION);
+        return $this->getData(self::DATA_DESCRIPTION);
     }
 
     /**
