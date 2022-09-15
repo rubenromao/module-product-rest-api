@@ -7,7 +7,6 @@ use Dev\RestApi\Api\ProductRepositoryInterface;
 use Dev\RestApi\Api\RequestItemInterface;
 use Dev\RestApi\Api\ResponseItemInterface;
 use Dev\RestApi\Api\ResponseItemInterfaceFactory;
-use Exception;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product\Action;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
@@ -21,26 +20,6 @@ use Magento\Store\Model\StoreManagerInterface;
 class ProductRepository implements ProductRepositoryInterface
 {
     /**
-     * @var Action
-     */
-    private $productAction;
-
-    /**
-     * @var CollectionFactory
-     */
-    private $productCollectionFactory;
-
-    /**
-     * @var ResponseItemInterfaceFactory
-     */
-    private $responseItemFactory;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
      * Constructor ProductRepository
      *
      * @param Action $productAction
@@ -49,16 +28,11 @@ class ProductRepository implements ProductRepositoryInterface
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
-        Action $productAction,
-        CollectionFactory $productCollectionFactory,
-        ResponseItemInterfaceFactory $responseItemFactory,
-        StoreManagerInterface $storeManager
-    ) {
-        $this->productAction = $productAction;
-        $this->productCollectionFactory = $productCollectionFactory;
-        $this->responseItemFactory = $responseItemFactory;
-        $this->storeManager = $storeManager;
-    }
+        private Action $productAction,
+        private CollectionFactory $productCollectionFactory,
+        private ResponseItemInterfaceFactory $responseItemFactory,
+        private StoreManagerInterface $storeManager
+    ) {}
 
     /**
      * @inheritDoc
@@ -67,10 +41,9 @@ class ProductRepository implements ProductRepositoryInterface
      * @return ResponseItemInterface
      * @throws NoSuchEntityException
      */
-    public function getItem(int $id) : ResponseItemInterface
+    public function getItem(int $id): ResponseItemInterface
     {
-        $collection = $this->getProductCollection()
-            ->addAttributeToFilter('entity_id', ['eq' => $id]);
+        $collection = $this->getProductCollection()->addAttributeToFilter('entity_id', ['eq' => $id]);
         /** @var ProductInterface $product */
         $product = $collection->getFirstItem();
         if (!$product->getId()) {
@@ -86,7 +59,7 @@ class ProductRepository implements ProductRepositoryInterface
      * @return void
      * @throws NoSuchEntityException
      */
-    public function setDescription(array $products) : void
+    public function setDescription(array $products): void
     {
         foreach ($products as $product) {
             $this->setDescriptionForProduct(
@@ -99,7 +72,7 @@ class ProductRepository implements ProductRepositoryInterface
     /**
      * @return Collection
      */
-    private function getProductCollection() : Collection
+    private function getProductCollection(): Collection
     {
         /** @var Collection $collection */
         $collection = $this->productCollectionFactory->create();
@@ -120,7 +93,7 @@ class ProductRepository implements ProductRepositoryInterface
      * @param ProductInterface $product
      * @return ResponseItemInterface
      */
-    private function getResponseItemFromProduct(ProductInterface $product) : ResponseItemInterface
+    private function getResponseItemFromProduct(ProductInterface $product): ResponseItemInterface
     {
         /** @var ResponseItemInterface $responseItem */
         $responseItem = $this->responseItemFactory->create();
@@ -138,9 +111,9 @@ class ProductRepository implements ProductRepositoryInterface
      * @param string $description
      * @return void
      * @throws NoSuchEntityException
-     * @throws Exception
+     * @throws \Exception
      */
-    private function setDescriptionForProduct(int $id, string $description) : void
+    private function setDescriptionForProduct(int $id, string $description): void
     {
         $this->productAction->updateAttributes(
             [$id],
